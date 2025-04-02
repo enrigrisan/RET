@@ -1,0 +1,49 @@
+%	----------------------
+%	- Function RETfan -
+%	----------------------
+%
+% Computes the area of the region comprised between the mean value 
+% of the filterd vector df and the possible beading
+%
+% Sintax:
+%
+%	fan = ret_fannew(t,d,beading mat.,options,dbf)
+% MM
+% EG 2001-05-09
+
+function [beading] = RETfan(t,df,beading,vth1,options,dbf)
+
+if dbf, disp('>> Inside RETfannew'); end;
+
+coeff = options.coeff;
+sbead=size(beading,1);
+
+for ct=1:sbead, 
+   media=mean(df);
+   d=abs(vth1-df);
+   area=0;
+   ct1=(beading(ct,1)+1):beading(ct,2);
+   dt=(t(ct1)-t(ct1-1));
+   area=sum((d(ct1)+d(ct1-1)).*dt/2);
+   fan=area;
+   l=abs(t(beading(ct,2))-t(beading(ct,1)));
+   densfan=(fan/l)*(1/coeff);
+   
+   n=find(d<1/3*vth1);
+   lf=t(max(n))-t(min(n));
+   %updating matrix beading
+   beading(ct,4)=fan;
+   beading(ct,5)=densfan;
+   beading(ct,6)=l;
+   beading(ct,7)=l;
+   bading(ct,8)=coeff;
+      
+   if dbf,
+      disp(['>> Analisi Irr. n. :',num2str(ct),', area calcolata :',num2str(fan),', dens. :',num2str(densfan)]);
+   end;
+end
+
+if dbf, disp('>> Finished RETfannew'); end;
+
+   
+

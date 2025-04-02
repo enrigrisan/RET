@@ -1,0 +1,38 @@
+function segr=RETsplinegen(seg,passo,sn,dbf);
+
+if dbf, disp('Inside RETsplinegen'); end;
+
+if ~sn,
+    for ct=1:length(seg);
+        if dbf,
+            disp(sprintf('Segment %i of %i',ct,length(seg)));
+        end;
+        xp=fnval(seg(ct).ppx,[seg(ct).ppx.breaks(1):passo:seg(ct).ppx.breaks(length(seg(ct).ppx.breaks))]);
+        yp=fnval(seg(ct).ppy,[seg(ct).ppy.breaks(1):passo:seg(ct).ppy.breaks(length(seg(ct).ppy.breaks))]);
+        d=fnval(seg(ct).ppd,[seg(ct).ppd.breaks(1):passo:seg(ct).ppd.breaks(length(seg(ct).ppd.breaks))])/2;
+        segr(ct)=seg(ct);
+        segr(ct).x=xp;
+        segr(ct).y=yp;
+        dy=[yp(2:end),yp(end)]-[yp(1:end-1),yp(end-1)];
+        dx=[xp(2:end),xp(end)]-[xp(1:end-1),xp(end-1)];
+        segr(ct).dir=atan2(dy,dx);
+        segr(ct).d=d;
+        segr(ct).ec=[999,999];
+    end;
+else
+    xp = fnval(seg(sn).ppx,[seg(sn).ppx.breaks(1):passo:seg(sn).ppx.breaks(length(seg(sn).ppx.breaks))]);
+    yp = fnval(seg(sn).ppy,[seg(sn).ppy.breaks(1):passo:seg(sn).ppy.breaks(length(seg(sn).ppy.breaks))]);
+    d=fnval(seg(sn).ppd,[seg(ct).ppd.breaks(1):passo:seg(ct).ppd.breaks(length(seg(ct).ppd.breaks))])/2;
+    segr(1)=seg(sn);
+    segr(1).x=xp;
+    segr(1).y=yp;
+    dy=[yp(2:end),yp(end)]-[yp(1:end-1),yp(end-1)];
+    dx=[xp(2:end),xp(end)]-[xp(1:end-1),xp(end-1)];
+    segr(1).dir=atan2(dy,dx);
+    segr(1).d=d;
+    segr(1).ec=[999,999];
+end;
+
+
+if dbf, disp('Finished RETsplinegen'); end;
+

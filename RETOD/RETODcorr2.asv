@@ -1,0 +1,4 @@
+function y=RETODcorr2(roi,roimask,x,y,r);
+
+roi=roi.*roimask;
+roitmp=

@@ -1,0 +1,61 @@
+%SEEDPOINT determines blob seedpoints.
+%   XSP = SEEDPOINT(X,ORD,STEP,DBF)
+%   XSP is the seed points image: eache seed point is identified
+%   by different integer number.
+%   X is first filterd by a median filter of order ORD
+%   then normalized in the range [0,1].
+%   By uniform spaced (with step STEP) thresholding,
+%   the seedpoints are determined
+%
+%   ADL 2001-03-02.
+%   EG  2001-04-27
+
+function xsp=RETseedpoint(x,ord,step,dbf)
+
+if dbf, disp('Inside RETseedpoint'); end
+
+xsp=x>0;
+x=medfilt2(x,[ord,ord]);
+x=RETnormalize(x,dbf);
+
+th=0;
+xth=(x>th);
+ec=~any(any(xth));
+if ~ec
+    xsp=zeros(size(x));
+end
+n=1;
+
+while ~ec
+    label=bwlabel(xth);
+    xlab=(label>0);
+    xtmp=((x.*xlab)<(th+step));
+    
+    spi=find((1-xtmp).*xlab);
+    if(~isempty(spi))
+        xsp(spi)=n;
+        n=n+1;
+    end;
+%     for ct=1:max(max(label))
+%         if dbf, disp(sprintf('Thresholding blob',ct)); end
+% 
+%         spi=find((label==ct));
+%         if ~any(x(spi)>(th+step))
+%             xsp(spi)=n;
+%             n=n+1;
+%         end
+%     end
+    th=th+step;
+    xth=x>th;
+    ec=~any(any(xth));
+end
+
+if dbf,
+    disp([' Seed points found: ',num2str(max(max(xsp)))]),
+    disp('Finished RETseedpoint'),
+end
+
+
+
+
+

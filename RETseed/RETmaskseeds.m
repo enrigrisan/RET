@@ -1,0 +1,24 @@
+function seedsnew=RETmaskseeds(xroi,seeds,dbf);
+
+if dbf, disp('Inside RETmaskseeds'); end;
+
+% mask=nmlz(xroi)==0;
+% ker=circker(5)>0;
+% mask=imdilate(mask,ker);
+% mask=imerode(mask,ker);
+% mask=medfilt2(double(mask),[11,11]);
+% mask=imdilate(mask,ker);
+% 
+% if dbf, sims(mask); end;
+% 
+% lseeds=length(seeds);
+% seedsnew=[];
+% 
+% for ct=1:lseeds,
+%     if ~mask(fix(seeds(ct).y),fix(seeds(ct).x)),
+%         seedsnew=[seedsnew,seeds(ct)];
+%     end;
+% end;
+
+seedsnew=seeds;
+if dbf, disp('Finished RETmaskseeds'); end;

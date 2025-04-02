@@ -1,0 +1,67 @@
+function RETviewbead(seg,xroi)
+%	--------------------------
+%	-Funzione RETviewbead
+%	--------------------------
+%
+% Diplay found beading segments
+%
+% 
+% Sintax:
+%	
+% ret_view(struttura SEG,nome_immagine, Flag1, Flag2, Flag3, dx, dy)
+%
+
+
+passo = .1;
+dim_struttura  = length(seg);
+sims(xroi);
+hold on;
+for cont = 1:dim_struttura,  
+   x = fnval( seg(cont).ppx,[ seg(cont).ppx.breaks(1):passo:seg(cont).ppx.breaks(length(seg(cont).ppx.breaks)) ]);
+   y = fnval( seg(cont).ppy,[ seg(cont).ppy.breaks(1):passo:seg(cont).ppy.breaks(length(seg(cont).ppy.breaks)) ]);
+   d = fnval( seg(cont).ppd,[ seg(cont).ppd.breaks(1):passo:seg(cont).ppd.breaks(length(seg(cont).ppd.breaks)) ])/2;
+   dist    = sqrt((x(1,2:length(x))-x(1,1:length(x)-1)).^2+(y(1,2:length(y))-y(1,1:length(y)-1)).^2);
+   sin_ang = (y(1,2:length(y))-y(1,1:length(y)-1))./dist;
+   sin_ang = [sin_ang(1,1) sin_ang];
+   cos_ang = (x(1,2:length(x))-x(1,1:length(x)-1))./dist;
+   cos_ang = [cos_ang(1,1) cos_ang];
+   plot( x, y , 'g');
+   plot(x - d.*sin_ang, y + d.*cos_ang , 'r');
+   plot(x + d.*sin_ang , y - d.*cos_ang , 'r');
+   [mb,nb]=size(seg(cont).b);
+   for ct = 1:mb,  
+      dx=diff(seg(cont).x);
+      dy=diff(seg(cont).y);
+      dl=sqrt(dx.^2+dy.^2);
+      for ctl=1:length(dl)
+          l(ctl)=sum(dl(1:ctl));
+      end;
+      dx=diff(x);
+      dy=diff(y);
+      dl=sqrt(dx.^2+dy.^2);
+      for ctl=1:length(dl)
+          lpp(ctl)=sum(dl(1:ctl));
+      end;
+      
+      nstart=find(lpp<l(seg(cont).b(ct,1)));
+      nstart=nstart(end);
+      nend=find(lpp<l(seg(cont).b(ct,2)));
+      nend=nend(end);
+      h=plot(x(nstart:nend) ,y(nstart:nend),'.y');
+         set(h,'LineWidth',2);
+         
+      %for ct1 = seg(cont).b(ct,1):seg(cont).b(ct,2);
+      %   h=plot(seg(cont).x(ct1) ,seg(cont).y(ct1),'.y');
+      %   set(h,'LineWidth',2);
+      %end;
+   end;
+   %stringa = num2str(cont);
+   %text(x(1,1)-3 ,y(1,1)-3 ,stringa,'FontSize',8,'Color',[0 0 0]);   
+end;
+
+
+ 
+   
+   
+   
+   

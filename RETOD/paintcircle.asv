@@ -1,0 +1,35 @@
+function imgout=paintcircle(imgin,centerx,centery,r,color)
+
+for x0=1:r
+    y0=(long)(floor((double)sqrt(r*r-x0*x0)));
+		startx=centerx-x0;
+		if startx<0 
+			startx=0;
+        end
+		if(startx>size.width)
+			startx=size.width;
+
+		endx=centerx+x0;
+		if(endx<0)
+			endx=0;
+		if(endx>size.width)
+			endx=size.width;
+
+		starty=centery-y0;
+		if(starty<0)
+			starty=0;
+		if(starty>size.height)
+			starty=size.height;
+
+		endy=centery+y0;
+		if(endy<0)
+			endy=0;
+		if(endy>size.height)
+			endy=size.height;
+
+		for(i=starty;i<endy;i++)
+		{
+			SetPixel(startx,i,IMGgray,color);
+			SetPixel(endx,i,IMGgray,color);
+		}
+	}
